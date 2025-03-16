@@ -52,14 +52,12 @@ class UserController {
         sameSite: "strict",
       });
 
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "Login successful",
-          user: user._id,
-          accessToken,
-        });
+      res.status(200).json({
+        success: true,
+        message: "Login successful",
+        user: user._id,
+        accessToken,
+      });
     } catch (err) {
       console.error(err);
       next(err);
@@ -77,10 +75,31 @@ class UserController {
         process.env.REFRESH_TOKEN_SECRET as string
       ) as { userId: string };
       const newAccessToken = generateAccessToken(decoded.userId);
-      res.json({ success: true, accessToken: newAccessToken });
+      res.json({
+        success: true,
+        accessToken: newAccessToken,
+        user: decoded.userId,
+      });
     } catch (error) {
       res.status(403).json({ message: "Invalid refresh token" });
     }
+  };
+
+  public logout: RequestHandler = (req: Request, res: Response) => {
+    res.clearCookie("refreshToken");
+    res.json({ message: "Logged out" });
+  };
+
+  public getCurrentUser: RequestHandler = async (
+    req: Request,
+    res: Response
+  ) => {
+    const { userId } = req.body;
+    const user = await User.findById(userId).select("-password");
+    res.send({
+      success: true,
+      data: user,
+    });
   };
 }
 
