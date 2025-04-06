@@ -13,15 +13,12 @@ class AuthMiddleware {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
-    console.log("token", token);
     try {
       const decoded = jwt.verify(
         token,
         process.env.ACCESS_TOKEN_SECRET as string
       ) as { userId: string };
-      console.log("decoded", decoded);
       req.body.userId = decoded.userId;
-      console.log("req.body", req.body);
       next();
     } catch (error) {
       res.status(403).json({ message: "Invalid or Expired Token" });

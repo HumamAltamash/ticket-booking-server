@@ -3,7 +3,9 @@ import dotenv from "dotenv";
 dotenv.config(); // Load environment variables
 import connectDB from "./config/db";
 import authRoutes from "./routes/authRoutes";
+import moviesRoutes from "./routes/moviesRoutes";
 import cookieParser from "cookie-parser";
+import { limiter } from "./middlewares/rateLimiter";
 
 const app = express();
 
@@ -14,8 +16,11 @@ app.use(cookieParser());
 // Connect to DB
 connectDB();
 
+app.use(limiter);
+
 // Use routes
 app.use("/api/auth", authRoutes);
+app.use("/api/movies", moviesRoutes);
 
 // Use PORT from environment variable or default to 3000
 const PORT = process.env.PORT || 3000;

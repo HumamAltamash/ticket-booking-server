@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { Types } from "mongoose";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 
-class UserController {
+class AuthController {
   public register: RequestHandler = async (
     req: Request,
     res: Response,
@@ -22,7 +22,9 @@ class UserController {
       const user = new User({ name, email, password, isAdmin });
       await user.save();
 
-      res.status(201).json({ message: "User created successfully" });
+      res
+        .status(201)
+        .json({ success: true, message: "User created successfully" });
     } catch (err) {
       console.error(err);
       next(err);
@@ -55,8 +57,10 @@ class UserController {
       res.status(200).json({
         success: true,
         message: "Login successful",
-        user: user._id,
-        accessToken,
+        data: {
+          user: user._id,
+          accessToken,
+        },
       });
     } catch (err) {
       console.error(err);
@@ -77,8 +81,11 @@ class UserController {
       const newAccessToken = generateAccessToken(decoded.userId);
       res.json({
         success: true,
-        accessToken: newAccessToken,
-        user: decoded.userId,
+        message: "Access token generated",
+        data: {
+          accessToken: newAccessToken,
+          user: decoded.userId,
+        },
       });
     } catch (error) {
       res.status(403).json({ message: "Invalid refresh token" });
@@ -87,7 +94,7 @@ class UserController {
 
   public logout: RequestHandler = (req: Request, res: Response) => {
     res.clearCookie("refreshToken");
-    res.json({ message: "Logged out" });
+    res.json({ success: true, message: "Logged out" });
   };
 
   public getCurrentUser: RequestHandler = async (
@@ -98,9 +105,10 @@ class UserController {
     const user = await User.findById(userId).select("-password");
     res.send({
       success: true,
+      message: "User fetched successfully",
       data: user,
     });
   };
 }
 
-export const userController = new UserController();
+export const authController = new AuthController();

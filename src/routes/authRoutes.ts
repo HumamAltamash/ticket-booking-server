@@ -1,24 +1,24 @@
 import { Router } from "express";
-import { userController } from "../controllers/authController";
+import { authController } from "../controllers/authController";
 import authMiddleware from "../middlewares/authMiddleware";
 
 const router = Router();
 
 // Register route
-router.post("/register", userController.register);
+router.post("/register", authController.register);
 
 // Login route
-router.post("/login", userController.login);
+router.post("/login", authController.login);
 
 // refresh token route
-router.post("/refresh", userController.refreshToken);
+router.post("/refresh", authController.refreshToken);
 
 router.get(
   "/get-current-user",
   authMiddleware.authenticate,
-  userController.getCurrentUser
+  authController.getCurrentUser
 );
 
-router.post("/logout", userController.logout);
+router.post("/logout", authController.logout);
 
 export default router;
