@@ -11,15 +11,17 @@ class AuthController {
     next: NextFunction
   ) => {
     try {
-      const { name, email, password, isAdmin } = req.body;
+      const { name, email, password, role } = req.body;
 
       const userExists = await User.findOne({ email });
       if (userExists) {
-        res.status(400).json({ message: "User already exists" });
+        res
+          .status(400)
+          .json({ success: false, message: "User already exists" });
         return;
       }
 
-      const user = new User({ name, email, password, isAdmin });
+      const user = new User({ name, email, password, role });
       await user.save();
 
       res
@@ -60,6 +62,7 @@ class AuthController {
         data: {
           user: user._id,
           accessToken,
+          role: user.role,
         },
       });
     } catch (err) {

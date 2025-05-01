@@ -24,7 +24,7 @@ router.put(
 );
 
 router.delete(
-  "/delete-movie",
+  "/delete-movie/:id",
   authMiddleware.authenticate,
   moviesController.deleteMovie
 );

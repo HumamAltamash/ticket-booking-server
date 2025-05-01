@@ -65,7 +65,7 @@ class MoviesController {
   public updateMovie: RequestHandler = async (req: Request, res: Response) => {
     try {
       const id = req.body._id;
-      console.log("id", id);
+
       if (!id) {
         res.status(400).json({
           success: false,
@@ -108,7 +108,7 @@ class MoviesController {
 
   public deleteMovie: RequestHandler = async (req: Request, res: Response) => {
     try {
-      const id = req.body.id;
+      const id = req.params.id;
       if (!id) {
         res.status(400).json({
           success: false,

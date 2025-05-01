@@ -3,8 +3,8 @@ import mongoose, { Document, Schema, Types } from "mongoose";
 // Define the possible roles as an enum
 export enum UserRole {
   USER = "user",
+  PARTNER = "partner",
   ADMIN = "admin",
-  MODERATOR = "moderator",
 }
 
 // Define an interface for the User model
@@ -13,7 +13,6 @@ export interface User extends Document {
   name: string;
   email: string;
   password: string;
-  isAdmin: boolean;
   role: UserRole;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
@@ -31,11 +30,6 @@ const userSchema: Schema = new Schema<User>({
   },
   password: {
     type: String,
-    required: true,
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false, // By default, users are not admins
     required: true,
   },
   role: {
