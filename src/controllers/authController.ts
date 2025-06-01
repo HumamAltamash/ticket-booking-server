@@ -1,7 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import User from "../models/userModel";
 import jwt from "jsonwebtoken";
-import { Types } from "mongoose";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 
 class AuthController {
